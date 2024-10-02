@@ -2,13 +2,13 @@ const ApiError = require('../ApiError')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const {User, UserStorage} = require('../models/model')
-const sequelize = require('../database');
+const sequelize = require('../db');
 
-const generateJwt = (id_client, FIO, login, number_phone) => 
+const generateJwt = (id_user, login, password, role) => 
 {
   return jwt.sign
   (
-    {id_client, FIO, login, number_phone},
+    {id_user, login, password, role},
     process.env.SECRET_KEY,
     {expiresIn: '72h'}
   )
@@ -19,14 +19,14 @@ class AuthController
   async registration(req, res, next)
   {
     try {
-      const {FIO, login, number_phone} = req.body
+      const {login, password} = req.body
       let candidate = await User.findOne({where: {login}})
       if (candidate)  
       {
         return next(ApiError.badRequest('Пользователь с таким login уже существует'))
       }
-      const user = await User.create({FIO, login, number_phone})
-      const token = generateJwt(user.id_client, user.FIO, user.login, user.number_phone)
+      const user = await User.create({login, password})
+      const token = generateJwt(user.id_user, user.login, user.password)
       return res.json({token})
     } catch (error) {
         console.log(error)
@@ -44,7 +44,7 @@ class AuthController
       {
         return next(ApiError.internal('Пользователь не найден'))
       }
-      const token = generateJwt(user.id_client, user.FIO, user.login, user.number_phone)
+      const token = generateJwt(user.id_user, user.login, user.password)
       return res.json({token})
     } catch (error) {
         console.log(error)

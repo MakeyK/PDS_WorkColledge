@@ -11,7 +11,7 @@
       "pg-hstore": "^2.3.4",
       "sequelize": "^6.37.1"
     },
-    "name": "PDS_WorkColledge",
+    "name": "pds_workcolledge",
     "version": "1.0.0",
     "main": "index.js",
     "devDependencies": {},

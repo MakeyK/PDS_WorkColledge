@@ -2,6 +2,7 @@ const {Users, Passengers, Tickets, Trains, Schedules, Van, Stations} = require('
 const {Sequelize} = require('../db')
 const {QueryTypes} = require('sequelize')
 const sequelize = require('../db')
+const ApiError = require('../ApiError')
 
 class DBControllerStations
 {

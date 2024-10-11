@@ -1,11 +1,12 @@
-const {Users, Passengers, Tickets, Trains, Schedules, Vans, Stations} = require('../models/models')
+const {Users, Passengers, Tickets, Trains, Schedules, Van, Stations} = require('../models/models')
 const {Sequelize} = require('../db')
 const {QueryTypes} = require('sequelize')
 const sequelize = require('../db')
+const ApiError = require('../ApiError')
 
 class DBControllerVans
 {
-    // Создание записи в таблице Vans
+    // Создание записи в таблице Van
     async createVans(req, res, next)
     {
         try {
@@ -14,7 +15,7 @@ class DBControllerVans
             {
                 return next(ApiError.badRequest("Введите полностью данные"))
             }
-            const createvan= await Vans.create({type, capacity})
+            const createvan= await Van.create({type, capacity})
             return res.json({message: "Производитель создан"})
         } catch (error) {
             next(ApiError.badRequest("Что-то пошло не так"))
@@ -24,21 +25,21 @@ class DBControllerVans
     // Вывод всей таблицы Vans
     async getAll(req,res)
     {
-        const vans = await Vans.findAll()
+        const vans = await Van.findAll()
         return res.json(vans)
     }
     // Вывод записей по определённому ID таблицы Vans
     async getID(req,res)
     {
         const {id_van} = req.params
-        let id_v = await Vans.findAll({where:{id_van}})
+        let id_v = await Van.findAll({where:{id_van}})
         return res.json(id_v)
     }
     // Удаление по выбранному ID таблицы Vans
     async DelId(req,res)
     {
         const {id_van} = req.params
-        let delidvan = await Vans.destroy({where:{id_van}})
+        let delidvan = await Van.destroy({where:{id_van}})
         return res.json(delidvan)
     }
     // Удаление всех записей в таблице Vans
@@ -52,8 +53,8 @@ class DBControllerVans
     // Редактирование записей по выбранному ID Vans
     async RedId(req,res)
     {
-        const {id_van} = req.body
-        const redvan = await Vans.update({title : req.body.title},{where:{id_van}})
+        const {id_van} = req.params
+        const redvan = await Van.update({type : req.body.type},{where:{id_van}})
         return res.json(redvan)
     }
 }

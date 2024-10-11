@@ -64,4 +64,4 @@ router.patch('/redtick/:id_ticket', DBControllerTickets.RedId)
 router.patch('/redv/:id_van', DBControllerVans.RedId)
 router.patch('/redstat/:id_station', DBControllerStations.RedId)
 
-module.exports = Router
+module.exports = router

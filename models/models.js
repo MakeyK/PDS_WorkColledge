@@ -1,13 +1,13 @@
 const { type } = require('os')
 const sequelize = require('../db')
 const {DataTypes, DATE, MEDIUMINT} = require('sequelize')
-const { mode } = require('crypto-js')
+const { model } = require('crypto-js')
 
 const Users = sequelize.define('users',{
     id_user: {type: DataTypes.INTEGER, primaryKey:true, autoIncrement:true},
     login: {type: DataTypes.STRING},
-    password: {type: DataTypes.DATE},
-    role: {type: DataTypes.DATE}
+    password: {type: DataTypes.STRING},
+    role: {type: DataTypes.STRING}
 },  {timestamps: false})
 
 const Stations = sequelize.define('stations', {
@@ -33,14 +33,14 @@ const Van = sequelize.define('van', {
     id_train: {type: DataTypes.INTEGER, references: {model: Trains, key:'id_train'}},
     id_van: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     type: {type: DataTypes.TEXT},
-    capacity: {type: DataTypes.TEXT}
+    capacity: {type: DataTypes.INTEGER}
 }, {timestamps: false})
 
 const Tickets = sequelize.define('tickets', {
     id_passenger: {type: DataTypes.INTEGER, references: {model: Passengers, key:'id_passenger'}},
     number_van: {type: DataTypes.INTEGER,references: {model: Van, key:'id_van'}},
     id_ticket: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement:true},
-    place: {type: DataTypes.TEXT},
+    place: {type: DataTypes.STRING},
     category: {type: DataTypes.TEXT}
 }, {timestamps: false})
 
@@ -49,17 +49,17 @@ const Schedules = sequelize.define('schedules', {
     id_station: {type: DataTypes.INTEGER, references: {model: Stations, key: 'id_station'}},
     id_schedule: {type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true},
     way: {type: DataTypes.INTEGER},
-    arrival_time: {type: DataTypes.TEXT},
-    departure_time: {type: DataTypes.TEXT}
+    arrival_time: {type: DataTypes.DATE},
+    departure_time: {type: DataTypes.DATE}
 }, {timestamps: false})
 
-Tickets.hasMany(Passengers, {
+Passengers.hasMany(Tickets, {
     foreignKey: 'id_passenger'
 })
 Users.hasOne(Passengers, {
     foreignKey: 'id_user'
 })
-Tickets.hasMany(Van, {
+Van.hasMany(Tickets, {
     foreignKey: 'id_van'
 })
 Van.hasMany(Tickets, {
